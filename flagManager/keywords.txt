@@ -1,0 +1,24 @@
+# keywords.txt for the flagManager Library
+#
+# KEYWORD1 is for the class name (orange)
+# KEYWORD2 is for methods and functions (brown)
+
+FlagManager	KEYWORD1
+
+# Volatile-safe (ISR-safe) functions
+setFlag			KEYWORD2
+clearFlag		KEYWORD2
+checkFlag		KEYWORD2
+toggleFlag		KEYWORD2
+getRawFlags		KEYWORD2
+setAllFlags		KEYWORD2
+clearAllFlags	KEYWORD2
+
+# Non-volatile functions
+getCapacity				KEYWORD2
+getFlagsString			KEYWORD2
+getInverseFlagsString	KEYWORD2
+setFlags				KEYWORD2
+
+# Standalone functions
+compareFlags	KEYWORD2
