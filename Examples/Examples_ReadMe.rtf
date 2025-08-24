@@ -1,0 +1,39 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Avenir-Book;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
+{\info
+{\title Examples.ReadMe}
+{\subject flagManager examples}
+{\author Don Gibson}
+{\*\company Greybeard Precision Engineering}
+{\*\copyright Don Gibson}
+{\keywords examples, flagManager}}\margl1440\margr1440\vieww19980\viewh17520\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs28 \cf0 FlagManager Examples\
+\
+These examples use a row of 8 (or 16) LEDs to visualize the outputs. Edit the PIN numbers to suit your LED hardware.\
+\
+01_BasicFlags\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+Shows the fundamental features of the FlagManager library. It demonstrates how to create 32-bit flag instances, set and clear individual flags, and retrieve the status of all flags as a binary string for printing to the serial monitor.\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \kerning1\expnd0\expndtw0 \
+02_Scanner\
+\pard\pardeftab720\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+This example demonstrates how to use 8-bit FlagManager instances to control two separate banks of LEDs. It creates a "Knight Rider" or Cylon scanner effect by lighting one LED at a time and moving the light back and forth across both banks simultaneously. The state of each LED bank is managed by its own FlagManager instance, showing how the library can be used to efficiently control hardware pins. 16 LEDs are required to demonstrate the scanner effect.\
+\
+03_Pattern_Matching\
+Demonstrates how to compare two FlagManager instances. It continuously generates a random 8-bit pattern and compares it against a predefined "standard" pattern. The results of the comparison (exact match, partial match, or no match) are then visualized on two banks of LEDs. This sketch highlights the utility of the library for pattern recognition or state validation.\
+\
+04_ISR_Communication\
+This example demonstrates the correct and safe way to use FlagManager to pass data from a hardware interrupt (ISR) to the main loop(). When an input pin changes state, a fast-executing ISR is triggered, which toggles a flag. The main loop then safely copies the flag data and updates a bank of LEDs to mirror the state of the input pins. This sketch highlights the critical use of the volatile keyword and the proper technique for reading shared data to avoid race conditions.\
+\
+05_System_State_Simulator\
+Shows how to build a simple state machine using multiple FlagManager instances. It simulates a control system with three subsystems (Power, Cooling, and Pumps), each managed by its own 8-bit FlagManager. The sketch runs through a timed sequence of simulated events, setting and clearing flags to represent faults and state changes. The overall system health is shown on a virtual control panel of LEDs, illustrating how flags can be used to manage and monitor complex, non-blocking processes.\
+\
+06_Finite_State_Machine\
+This advanced example demonstrates how to implement a complete Finite State Machine (FSM) using a single 32-bit FlagManager instance to hold the entire system's state. It simulates a control system that transitions through various states (IDLE, NORMAL_OPERATION, GRID_FAILURE, etc.) based on a timed event sequence. The code is organized using nested namespaces for enumerated flags, states, and hardware definitions, demonstrating a robust and scalable approach to building complex, non-blocking applications.}
