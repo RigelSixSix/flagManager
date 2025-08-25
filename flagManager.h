@@ -1,5 +1,5 @@
 //===========================================================
-//  flagManager_u.h (Universal)
+//  flagManager.h (Universal)
 //  Provides a fast and efficient means of setting 
 //  and interacting with flags (bits) per instance.
 //  Use to coordinate tasks, states and events between modules.
@@ -18,7 +18,7 @@
 //  Don Gibson
 //  Greybeard Precision
 //  Vancouver, Canada
-//  V2.11 August 2025
+//  V2.1.3 August 2025
 //
 //===========================================================
 
