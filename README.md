@@ -1,5 +1,6 @@
 flagManager
-A lightweight, efficient, and versatile C++ template library for managing up to 32 boolean states (flags) in a single integer, perfect for embedded systems and Arduino projects.
+
+A lightweight, efficient, and versatile C++ template library for managing up to 32 boolean states (flags) in a single integer.
 
 flagManager is designed to help developers write clean, fast, and memory-efficient non-blocking code. It is an ideal tool for coordinating tasks, managing complex state machines, handling interrupts safely, and creating compact data packets for MCU-to-MCU communication.
 
@@ -10,15 +11,17 @@ Type Flexible: Built as a C++ template, it can be instantiated with uint8_t, uin
 
 ISR-Safe: Provides volatile-correct functions, making it perfect for safely and quickly passing events from an Interrupt Service Routine (ISR) to the main loop().
 
-Promotes Non-Blocking Code: An essential tool for creating responsive, event-driven applications without using delay().
+Promotes Non-Blocking Code: A valuable tool for creating responsive, event-driven applications without using delay().
 
 High-Density Communication: Ideal for creating compact and efficient data payloads for MCU-to-MCU communication over I2C, SPI, or UART.
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Getting Started
 Installation
-Arduino Library Manager: (Once published) Open the Arduino IDE, navigate to Sketch > Include Library > Manage Libraries... and search for "flagManager".
+Arduino Library Manager:  Open the Arduino IDE, navigate to Sketch > Include Library > Manage Libraries... and search for "flagManager".
 
-Manual Installation: Download the latest release from this repository. In the Arduino IDE, choose Sketch > Include Library > Add .ZIP Library... and select the downloaded file.
+Manual Installation: Download the latest release. In the Arduino IDE, choose Sketch > Include Library > Add .ZIP Library... and select the downloaded file.
 
 Basic Usage
 Here is a simple example of how to use flagManager in a sketch.
@@ -61,6 +64,9 @@ void loop() {
     tasks.clearFlag(TASK_UPDATE_SCREEN);
   }
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 API Reference
 The flagManager class is a template and must be instantiated with an integer type, e.g., FlagManager<uint8_t> myFlags;.
@@ -113,6 +119,9 @@ Returns -1 for a partial match (some bits match, but not all).
 
 Returns 0 for no match.
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 Use-Cases and Examples
 The library includes six commented sketches in the examples folder to demonstrate its core functionality and advanced applications.
 
@@ -150,6 +159,8 @@ receivedCommands.setFlags(receivedPayload);
 if (receivedCommands.checkFlag(CMD_PUMP_ON)) {
   // Turn the pump on...
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 Contributing
 Contributions are welcome! If you have an idea for a new feature or have found a bug, please feel free to fork the repository, make your changes, and submit a pull request.
