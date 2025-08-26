@@ -1,8 +1,10 @@
 //===========================================================
 //  FlagManager
 //  Provides a fast and efficient means of setting and
-//  interacting with flags (bits) per instance. This templated
+//  interacting with up to 32 flags (bits) per instance. This templated
 //  version works with uint8_t, uint16_t, and uint32_t.
+//  The MCU should be connected to 16 LEDs in 2 banks of 8 to
+//  visualise the effect
 //
 //  Don Gibson
 //  Greybeard Precision
