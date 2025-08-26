@@ -9,7 +9,7 @@
 //  Don Gibson
 //  Greybeard Precision
 //  Vancouver, Canada
-//  V2.1.3 August 2025
+//  V2.1.4 August 2025
 //
 //  FlagManager Example: 03_Pattern_Matching
 //  Demonstrates how to use a compareFlags() function to
@@ -40,12 +40,8 @@ void setFlagsFromByte(FlagManager<uint8_t>& flags, uint8_t data) {
   // First, reset all flags to a known state (0) to ensure a clean slate.
   flags.clearAllFlags();
 
-  // Now, iterate through the byte and set only the flags that should be 1.
-  for (int i = 0; i < numLedsPerBank; i++) {
-    if (bitRead(data, i)) {
-      flags.setFlag(i);
-    }
-  }
+  // Use the library's efficient, built-in setFlags function.
+  flags.setFlags(data);
 }
 
 /**
