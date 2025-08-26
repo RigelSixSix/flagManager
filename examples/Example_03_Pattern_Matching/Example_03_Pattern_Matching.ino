@@ -1,8 +1,10 @@
 //===========================================================
 //  FlagManager
 //  Provides a fast and efficient means of setting and
-//  interacting with flags (bits) per instance. This templated
+//  interacting with up to 32 flags (bits) per instance. This templated
 //  version works with uint8_t, uint16_t, and uint32_t.
+//  The MCU should be connected to 16 LEDs in 2 banks of 8 to
+//  visualise the effect
 //
 //  Don Gibson
 //  Greybeard Precision
@@ -20,7 +22,7 @@
 FlagManager<uint8_t> standardPatternFlags;
 FlagManager<uint8_t> randomPatternFlags;
 
-// The pattern to match against. 0b01010101 is a common test pattern (0x55 in hex).
+// The pattern to match against. 0b01010101 is the common test pattern (0x55 in hex).
 const uint8_t standardPattern = 0b01010101;
 
 // --- Hardware Definitions ---
@@ -32,6 +34,7 @@ const int numLedsPerBank = 8;
  * @brief Sets the flags in a FlagManager instance from the bits of a byte.
  * @param flags A reference to the 8-bit FlagManager to modify.
  * @param data An 8-bit integer (byte) where each bit corresponds to a flag.
+ * since the actial variable is an int(8|16|32), data can also be a numeric value
  */
 void setFlagsFromByte(FlagManager<uint8_t>& flags, uint8_t data) {
   // First, reset all flags to a known state (0) to ensure a clean slate.
@@ -71,7 +74,7 @@ void indicateNoMatch() {
  */
 void indicatePartialMatch() {
   indicateNoMatch(); // Turn off all bank 1 LEDs first for a clean signal.
-  for (int i = 4; i < numLedsPerBank; i++) {
+  for (int i = 4; i < numLedsPerBank; i++) {             // turn on 4 to 7
     digitalWrite(ledPinsBank1[i], HIGH);
   }
 }
