@@ -7,7 +7,7 @@
 //  Don Gibson
 //  Greybeard Precision
 //  Vancouver, Canada
-//  V2.10 August 2025
+//  V2.1.3 August 2025
 //
 //  FlagManager Example: 03_Pattern_Matching
 //  Demonstrates how to use a compareFlags() function to
@@ -20,12 +20,12 @@
 FlagManager<uint8_t> standardPatternFlags;
 FlagManager<uint8_t> randomPatternFlags;
 
-// The pattern to match against. 0b01010101 is the common test pattern (0x55 in hex).
+// The pattern to match against. 0b01010101 is a common test pattern (0x55 in hex).
 const uint8_t standardPattern = 0b01010101;
 
 // --- Hardware Definitions ---
-const int ledPinsBank1[] = {2, 3, 4, 5, 6, 7, 8, 9};
-const int ledPinsBank2[] = {34, 35, 36, 37, 38, 39, 40, 41}; 
+const int ledPinsBank1[] = {2, 3, 4, 5, 6, 7, 8, 9};       // Bank 1 shows match status
+const int ledPinsBank2[] = {34, 35, 36, 37, 38, 39, 40, 41}; // Bank 2 shows the random pattern
 const int numLedsPerBank = 8;
 
 /**
@@ -34,27 +34,45 @@ const int numLedsPerBank = 8;
  * @param data An 8-bit integer (byte) where each bit corresponds to a flag.
  */
 void setFlagsFromByte(FlagManager<uint8_t>& flags, uint8_t data) {
-  // Use the library's built-in setFlags function for efficiency.
-  flags.setFlags(data);
-}
+  // First, reset all flags to a known state (0) to ensure a clean slate.
+  flags.clearAllFlags();
 
-/**
- * @brief Turns off all LEDs in both banks.
- */
-void indicateNoMatch() {
+  // Now, iterate through the byte and set only the flags that should be 1.
   for (int i = 0; i < numLedsPerBank; i++) {
-    digitalWrite(ledPinsBank1[i], LOW);
-    digitalWrite(ledPinsBank2[i], LOW);
+    if (bitRead(data, i)) {
+      flags.setFlag(i);
+    }
   }
 }
 
 /**
- * @brief Indicates a partial match by turning on the upper half of LED bank 2.
+ * @brief Updates a bank of LEDs to match the state of a FlagManager instance.
+ * @param flags A reference to the 8-bit FlagManager holding the desired LED states.
+ * @param pins An array of pin numbers for the LED bank.
+ */
+void updateLedsFromFlags(const FlagManager<uint8_t>& flags, const int pins[]) {
+  for (int i = 0; i < numLedsPerBank; i++) {
+    bool ledState = flags.checkFlag(i);
+    digitalWrite(pins[i], ledState);
+  }
+}
+
+/**
+ * @brief Turns off all LEDs in bank 1.
+ */
+void indicateNoMatch() {
+  for (int i = 0; i < numLedsPerBank; i++) {
+    digitalWrite(ledPinsBank1[i], LOW);
+  }
+}
+
+/**
+ * @brief Indicates a partial match by turning on the upper half of LED bank 1.
  */
 void indicatePartialMatch() {
-  indicateNoMatch(); // Turn off all LEDs first for a clean signal.
+  indicateNoMatch(); // Turn off all bank 1 LEDs first for a clean signal.
   for (int i = 4; i < numLedsPerBank; i++) {
-    digitalWrite(ledPinsBank2[i], HIGH);
+    digitalWrite(ledPinsBank1[i], HIGH);
   }
 }
 
@@ -62,7 +80,6 @@ void indicatePartialMatch() {
  * @brief Indicates an exact match by turning on all of LED bank 1.
  */
 void indicateExactMatch() {
-  indicateNoMatch(); // Turn off all LEDs first.
   for (int i = 0; i < numLedsPerBank; i++) {
     digitalWrite(ledPinsBank1[i], HIGH);
   }
@@ -99,6 +116,9 @@ void loop() {
   uint8_t randomNumber = random(0, 256);
   setFlagsFromByte(randomPatternFlags, randomNumber);
 
+  // Immediately display the generated random pattern on LED Bank 2.
+  updateLedsFromFlags(randomPatternFlags, ledPinsBank2);
+
   // 2. Compare the random pattern against the standard pattern.
   //    This assumes a standalone `compareFlags` function exists in the library.
   //    - Returns 1 for an exact match.
@@ -106,7 +126,7 @@ void loop() {
   //    - Returns 0 for no match.
   int result = compareFlags(standardPatternFlags, randomPatternFlags);
 
-  // 3. Take action based on the comparison result.
+  // 3. Take action based on the comparison result, updating LED Bank 1.
   switch (result) {
     case 1: // Exact Match
       indicateExactMatch();
