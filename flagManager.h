@@ -22,19 +22,18 @@
 //
 //===========================================================
 
-#ifndef flagManager_u_h
-#define flagManager_u_h
+#ifndef flagManager_h
+#define flagManager_h
 
 #include <Arduino.h>
 
-template <typename T> // Make the class a template with placeholder type T
+template <typename T>
 class FlagManager {
 public:
   // Constructor, initializes flags to 0
   FlagManager() : flags(0) {}
 
-  // --- Volatile-Safe Functions ---
-  // These are designed to be callable on a volatile object, such as in an ISR.
+  // --- Volatile-Safe (ISR-Safe) Functions ---
 
   T getRawFlags() volatile const {
     return flags;
@@ -74,7 +73,15 @@ public:
   }
 
   // --- Non-Volatile Functions ---
-  // These are optimized for performance and are NOT intended for use in an ISR.
+
+  /**
+   * @brief Sets the entire flag register to the provided integer value.
+   * @param value The integer value to load into the flags. Note it is
+   * called setFlags() to set the entire integer vs. setFlag() which sets 1 bit
+   */
+  void setFlags(T value) {
+    flags = value;
+  }
 
   int getCapacity() const {
     return numFlags;
@@ -82,7 +89,7 @@ public:
 
   String getFlagsString() const {
     String result = "";
-    T flags_copy = flags; // Create a non-volatile copy for high performance
+    T flags_copy = flags; // Create a non-volatile copy
     for (int i = numFlags - 1; i >= 0; i--) {
       result += (flags_copy & ((T)1 << i)) ? '1' : '0';
     }
@@ -91,7 +98,7 @@ public:
 
   String getInverseFlagsString() const {
     String result = "";
-    T flags_copy = flags; // Create a non-volatile copy for high performance
+    T flags_copy = flags; // Create a non-volatile copy
     for (int i = numFlags - 1; i >= 0; i--) {
       result += (flags_copy & ((T)1 << i)) ? '0' : '1';
     }
@@ -99,47 +106,24 @@ public:
   }
 
 private:
-  T flags; // The internal data storage of placeholder type T
+  volatile T flags; // The internal data storage of placeholder type T
   
   static const int numFlags = sizeof(T) * 8; 
 };
 
-//======================================================================
-//  STANDALONE HELPER FUNCTION
-//  Compares two FlagManager instances.
-//  Returns:
-//   1: All bits are identical (exact match)
-//  -1: At least one bit matches, but not all (partial match)
-//   0: No bits match at all
-//======================================================================
+// Standalone compareFlags function
 template <typename T>
-int compareFlags(const FlagManager<T>& fm1, const FlagManager<T>& fm2) {
-  // getRawFlags() must be volatile const to be called on a potentially volatile object
-  // This allows the function to be used in an ISR context.
-  // 
-  // The flags are stored in a type T, which can be uint8_t, uint16_t, or uint32_t.
-  // The function compares the flags of both instances and returns:
-  // 1 if all bits are identical,
-  // -1 if at least one bit matches but not all, (e.g. test if any pumps are running)
-  // 0 if no bits match at all.
-  // This is useful for checking the state of flags across different 
-  // FlagManager instances, or when comparing a set of flags to a known condition
-  
-  T flags1 = fm1.getRawFlags();
-  T flags2 = fm2.getRawFlags();
+int compareFlags(const FlagManager<T>& a, const FlagManager<T>& b) {
+  T a_flags = a.getRawFlags();
+  T b_flags = b.getRawFlags();
 
-  // Case 1: All bits are identical
-  if (flags1 == flags2) {
-    return 1;
+  if (a_flags == b_flags) {
+    return 1; // Exact match
   }
-
-  // Case 2: At least one bit matches, but not all
-  if ((flags1 & flags2) != 0) {
-    return -1;
+  if ((a_flags & b_flags) != 0) {
+    return -1; // Partial match
   }
-
-  // Case 3: No bits match at all
-  return 0;
+  return 0; // No match
 }
 
 #endif
