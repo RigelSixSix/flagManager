@@ -77,6 +77,8 @@ using namespace ControlSystem;
 /**
  * @brief Updates the physical LEDs on the control panel based on current flags.
  */
+// I know the variable/function names look a bit long winded, however this is a very manageble and
+// scaleble way of creating large, complex multistate systems, by using fully enumerated flags and namespaces
 void updateControlPanel() {
   digitalWrite(Hardware::ledPins[Hardware::LED_MAIN_POWER],   systemFlags.checkFlag(Flags::FLAG_MAIN_POWER_OK));
   digitalWrite(Hardware::ledPins[Hardware::LED_BACKUP_POWER], systemFlags.checkFlag(Flags::FLAG_BACKUP_POWER_ACTIVE));
